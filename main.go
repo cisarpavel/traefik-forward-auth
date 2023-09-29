@@ -57,8 +57,8 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		// Set the CSRF cookie
 		http.SetCookie(w, fw.MakeCSRFCookie(r, nonce))
 		logger.Debug("Set CSRF cookie and redirecting to oidc login")
-		logger.Debug("uri.Path was %s",uri.Path)
-		logger.Debug("fw.Path was %s",fw.Path)
+		logger.Debug("uri.Path was %s", uri.Path)
+		logger.Debug("fw.Path was %s", fw.Path)
 
 		// Forward them on
 		http.Redirect(w, r, fw.GetLoginURL(r, nonce), http.StatusTemporaryRedirect)
@@ -149,6 +149,7 @@ func getOidcConfig(oidc string) map[string]interface{} {
 	uri.Path = path.Join(uri.Path, "/.well-known/openid-configuration")
 	res, err := http.Get(uri.String())
 	if err != nil {
+		log.Errorf("Error getting user: %s", err)
 		log.Fatal("failed to get oidc parametere from oidc connect")
 	}
 	body, err := ioutil.ReadAll(res.Body)
